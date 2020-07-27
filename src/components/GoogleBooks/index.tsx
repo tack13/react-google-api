@@ -34,26 +34,22 @@ export const GoogleBooks: React.FC = () => {
   const { volumeList } = useSelector((state: State) => ({
     volumeList: state.googleBooks.volumeList
   }))
-
   const dispatch = useDispatch()
 
-  const handleOnSearchButton = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.preventDefault()
-    const result = await searchGoogleBooks(searchString)
-    if (result.isSuccess) {
-      dispatch(GoogleBooksActions.setVolumes(VolumeList.fromResponse(result.data)))
-    } else {
-      window.alert(String(result.error))
-    }
-  }
   return (
     <Wrapper>
       <Body>
         <Title>Google Books 検索</Title>
         <SearchForm>
           <Input placeholder="検索ワードを入力" onChange={event => changeSearchString(event.target.value)} />
-          <SearchButton onClick={event => handleOnSearchButton(event)} disabled={!searchString}>
-            検索
+          <SearchButton
+            onClick={event => {
+              event.preventDefault()
+              dispatch(GoogleBooksActions.getVolumes(searchString))
+            }}
+            disabled={!searchString}
+          >
+          検索
           </SearchButton>
         </SearchForm>
         {volumeList.kind && (<SearchResult volumeList={volumeList} />)}
