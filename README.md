@@ -18,3 +18,4 @@ $ create-react-app react-google-api --typescript
 
 開発モードで実行。<br />
 [http://localhost:3000](http://localhost:3000)でブラウザを起動。
+
