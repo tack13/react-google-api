@@ -17,7 +17,7 @@ const App: React.FC = () => {
           <OfficialLink className='App-link' href='https://reactjs.org' target='_blank' rel='noopener noreferrer'>
             Learn React
           </OfficialLink>
-          <OtameshiLink to={Path.otameshi}>お試しページへのリンク</OtameshiLink>
+          <GoogleBooksiLink to={Path.googleBooks}>お試しページへのリンク</GoogleBooksiLink>
         </Header>
       </Wrapper>
     </>
@@ -51,7 +51,7 @@ const Text = styled.p``
 
 const CodeText = styled.code``
 
-const OtameshiLink = styled(Link)`
+const GoogleBooksiLink = styled(Link)`
   margin-top: 30px;
 `
 

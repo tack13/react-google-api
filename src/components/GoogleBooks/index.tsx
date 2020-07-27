@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux'
+import { State } from '../../reducers'
+import { GoogleBooksActions } from '../../actions/googleBooks'
+import { VolumeList } from '../../models/Volume'
+import { SearchResult } from './SearchResult'
 
 const searchGoogleBooks = async (searchString: string) => {
   const url = 'https://www.googleapis.com/books/v1/volumes'
@@ -24,15 +29,19 @@ const searchGoogleBooks = async (searchString: string) => {
 }
 
 
-export const Otameshi: React.FC = () => {
+export const GoogleBooks: React.FC = () => {
   const [searchString, changeSearchString] = useState('')
-  const [searchResult, changeSearchResult] = useState<any>(null)
+  const { volumeList } = useSelector((state: State) => ({
+    volumeList: state.googleBooks.volumeList
+  }))
+
+  const dispatch = useDispatch()
 
   const handleOnSearchButton = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault()
     const result = await searchGoogleBooks(searchString)
     if (result.isSuccess) {
-      changeSearchResult(result.data)
+      dispatch(GoogleBooksActions.setVolumes(VolumeList.fromResponse(result.data)))
     } else {
       window.alert(String(result.error))
     }
@@ -47,13 +56,7 @@ export const Otameshi: React.FC = () => {
             検索
           </SearchButton>
         </SearchForm>
-        {searchResult && (
-          <ResultContent>
-            {searchResult.items.map((item: any) => {
-              return <ResultTitle key={item.id}>{item.volumeInfo.title}</ResultTitle>
-            })}
-          </ResultContent>
-        )}
+        {volumeList.kind && (<SearchResult volumeList={volumeList} />)}
       </Body>
     </Wrapper>
   )
@@ -103,17 +106,5 @@ const SearchButton = styled.button`
   &:disabled {
     background-color: #bfbfbf
     cursor: not-allowed
-  }
-`
-
-const ResultContent = styled.div`
-  margin-top: 20px
-`
-
-const ResultTitle = styled.div`
-  padding: 10px 0
-  border-bottom: 1px solid
-  &:first-of-type {
-    border-top: 1px solid
   }
 `
